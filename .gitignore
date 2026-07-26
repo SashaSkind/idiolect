@@ -1,0 +1,14 @@
+.venv/
+.jac/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+*.log
+data/audio/*
+!data/audio/.gitkeep
+eval/training-set.jsonl
+.DS_Store
+.idea/
+.vscode/

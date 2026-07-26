@@ -1,0 +1,8 @@
+{
+  "corrections": [0, 10, 20, 30, 40, 50, 60, 70],
+  "baseline": [0.68, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68],
+  "shared_vocabulary": [0.68, 0.59, 0.51, 0.43, 0.36, 0.31, 0.27, 0.24],
+  "unshared_vocabulary": [0.68, 0.65, 0.62, 0.59, 0.57, 0.55, 0.54, 0.53],
+  "source": "Placeholder data — Track A replaces this file with TORGO results"
+}
+
