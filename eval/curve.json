@@ -1,0 +1,139 @@
+{
+ "generated": "2026-07-26 13:24",
+ "asr_backend": "parakeet",
+ "asr_model": "mlx-community/parakeet-tdt-0.6b-v3",
+ "rerank_model": "llama3.1:8b",
+ "dataset": "TORGO (Rudzicz et al. 2012)",
+ "speaker": "F03",
+ "speakers": [
+  "F03"
+ ],
+ "utterances": 128,
+ "step": 10,
+ "conditions": {
+  "shared": {
+   "baseline_wer": 0.1961,
+   "test_n": 25,
+   "stream_n": 103,
+   "points": [
+    {
+     "corrections": 0,
+     "wer": 0.1961,
+     "vocab": 0
+    },
+    {
+     "corrections": 10,
+     "wer": 0.2157,
+     "vocab": 39
+    },
+    {
+     "corrections": 20,
+     "wer": 0.201,
+     "vocab": 72
+    },
+    {
+     "corrections": 30,
+     "wer": 0.1961,
+     "vocab": 97
+    },
+    {
+     "corrections": 40,
+     "wer": 0.201,
+     "vocab": 131
+    },
+    {
+     "corrections": 50,
+     "wer": 0.1912,
+     "vocab": 163
+    },
+    {
+     "corrections": 60,
+     "wer": 0.1961,
+     "vocab": 199
+    },
+    {
+     "corrections": 70,
+     "wer": 0.201,
+     "vocab": 232
+    },
+    {
+     "corrections": 80,
+     "wer": 0.2059,
+     "vocab": 263
+    },
+    {
+     "corrections": 90,
+     "wer": 0.2059,
+     "vocab": 294
+    },
+    {
+     "corrections": 100,
+     "wer": 0.201,
+     "vocab": 333
+    }
+   ]
+  },
+  "unshared": {
+   "baseline_wer": 0.1792,
+   "test_n": 25,
+   "stream_n": 103,
+   "points": [
+    {
+     "corrections": 0,
+     "wer": 0.1908,
+     "vocab": 0
+    },
+    {
+     "corrections": 10,
+     "wer": 0.1734,
+     "vocab": 41
+    },
+    {
+     "corrections": 20,
+     "wer": 0.185,
+     "vocab": 73
+    },
+    {
+     "corrections": 30,
+     "wer": 0.1908,
+     "vocab": 104
+    },
+    {
+     "corrections": 40,
+     "wer": 0.2023,
+     "vocab": 135
+    },
+    {
+     "corrections": 50,
+     "wer": 0.1908,
+     "vocab": 170
+    },
+    {
+     "corrections": 60,
+     "wer": 0.2139,
+     "vocab": 193
+    },
+    {
+     "corrections": 70,
+     "wer": 0.1908,
+     "vocab": 227
+    },
+    {
+     "corrections": 80,
+     "wer": 0.1908,
+     "vocab": 248
+    },
+    {
+     "corrections": 90,
+     "wer": 0.185,
+     "vocab": 286
+    },
+    {
+     "corrections": 100,
+     "wer": 0.185,
+     "vocab": 314
+    }
+   ]
+  }
+ }
+}
