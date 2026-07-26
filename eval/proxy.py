@@ -25,7 +25,7 @@ overall WER it reports **R-WER**, word error rate restricted to the personal
 terms, which is where the claimed effect lives.
 
 Honest limitations, to state in the writeup:
-  * synthetic speech, one voice, not a person with dysarthria;
+  * synthetic speech across four voices, not a person with dysarthria;
   * degradation is acoustic (noise, level, tempo, muffling), not articulatory;
   * sentences were written to contain personal vocabulary, so the opportunity
     rate is high by construction. That is the point — it isolates the
@@ -110,16 +110,26 @@ TEST = [
 ]
 
 
-def _degrade(text: str, path: str) -> None:
+#: Rotated across utterances so the result is not an artefact of one voice.
+#: Two genders and four accents (GB, AU, IE, US).
+VOICES = [("Daniel", 205), ("Karen", 195), ("Moira", 200), ("Samantha", 210)]
+
+
+def _degrade(text: str, path: str, idx: int) -> None:
     """Synthesise and degrade until the recogniser genuinely struggles."""
+    voice, rate = VOICES[idx % len(VOICES)]
     aiff = path + ".aiff"
     subprocess.run(
-        ["say", "-r", "205", "-v", "Daniel", "-o", aiff, text],
+        ["say", "-r", str(rate), "-v", voice, "-o", aiff, text],
         check=True, capture_output=True,
     )
+    # Slight per-utterance variation, so the recogniser is not defeated by one
+    # fixed filter chain that it might happen to be unusually bad at.
+    tempo = 1.12 + 0.03 * (idx % 3)
+    cutoff = 2600 + 150 * (idx % 3)
     subprocess.run(
         ["ffmpeg", "-y", "-loglevel", "error", "-i", aiff,
-         "-af", "volume=0.30,atempo=1.16,lowpass=f=2700,"
+         "-af", f"volume=0.30,atempo={tempo:.2f},lowpass=f={cutoff},"
                 "aresample=16000,highpass=f=180",
          "-ar", "16000", "-ac", "1", path],
         check=True, capture_output=True,
@@ -145,7 +155,7 @@ def build_audio(force: bool = False) -> dict[str, str]:
     for i, text in enumerate(STREAM + TEST):
         p = os.path.join(AUDIO_DIR, f"u{i:03d}.wav")
         if force or not os.path.exists(p):
-            _degrade(text, p)
+            _degrade(text, p, i)
             _mix_noise(p)
         paths[text] = p
     return paths
@@ -205,6 +215,7 @@ def main() -> None:
 
     out = {
         "benchmark": "personal-vocabulary, proxy speaker (synthetic)",
+        "voices": [v for v, _ in VOICES],
         "disclaimer": (
             "Synthesised proxy speech degraded acoustically. NOT dysarthric "
             "speech. Isolates whether personal vocabulary is recoverable; "

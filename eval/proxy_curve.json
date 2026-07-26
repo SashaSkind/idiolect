@@ -1,5 +1,11 @@
 {
  "benchmark": "personal-vocabulary, proxy speaker (synthetic)",
+ "voices": [
+  "Daniel",
+  "Karen",
+  "Moira",
+  "Samantha"
+ ],
  "disclaimer": "Synthesised proxy speech degraded acoustically. NOT dysarthric speech. Isolates whether personal vocabulary is recoverable; not an estimate of real-world gain.",
  "asr_backend": "parakeet",
  "rerank_model": "llama3.1:8b",
@@ -19,44 +25,44 @@
  ],
  "stream_n": 20,
  "test_n": 20,
- "baseline_wer": 0.3387,
- "baseline_rare_wer": 0.6667,
+ "baseline_wer": 0.3468,
+ "baseline_rare_wer": 0.6296,
  "points": [
   {
    "corrections": 0,
    "vocab": 0,
-   "wer": 0.2984,
-   "rare_wer": 0.6667
+   "wer": 0.2903,
+   "rare_wer": 0.5926
   },
   {
    "corrections": 4,
    "vocab": 6,
-   "wer": 0.3065,
-   "rare_wer": 0.5556
+   "wer": 0.2984,
+   "rare_wer": 0.5926
   },
   {
    "corrections": 8,
    "vocab": 9,
-   "wer": 0.2903,
+   "wer": 0.2984,
    "rare_wer": 0.5556
   },
   {
    "corrections": 12,
    "vocab": 12,
-   "wer": 0.2823,
-   "rare_wer": 0.5185
+   "wer": 0.3065,
+   "rare_wer": 0.5556
   },
   {
    "corrections": 16,
    "vocab": 12,
-   "wer": 0.2742,
+   "wer": 0.2903,
    "rare_wer": 0.4815
   },
   {
    "corrections": 20,
    "vocab": 12,
    "wer": 0.2903,
-   "rare_wer": 0.5556
+   "rare_wer": 0.5185
   }
  ]
 }

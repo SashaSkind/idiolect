@@ -60,7 +60,7 @@ writeup, since the demo vocabulary is medical.
 
 See `eval/FINDINGS.md` before writing any claim about accuracy. Short version:
 TORGO shows **no gain** (and we explain why — its prompts contain almost no
-personal vocabulary); the proxy benchmark shows **R-WER −28%**. Do not claim a
+personal vocabulary); the proxy benchmark shows **R-WER −24%**. Do not claim a
 TORGO improvement.
 
 ## Ollama

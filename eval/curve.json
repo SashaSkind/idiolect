@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-26 13:24",
+ "generated": "2026-07-26 14:24",
  "asr_backend": "parakeet",
  "asr_model": "mlx-community/parakeet-tdt-0.6b-v3",
  "rerank_model": "llama3.1:8b",
@@ -23,12 +23,12 @@
     },
     {
      "corrections": 10,
-     "wer": 0.2157,
+     "wer": 0.2059,
      "vocab": 39
     },
     {
      "corrections": 20,
-     "wer": 0.201,
+     "wer": 0.1961,
      "vocab": 72
     },
     {
@@ -38,12 +38,12 @@
     },
     {
      "corrections": 40,
-     "wer": 0.201,
+     "wer": 0.1961,
      "vocab": 131
     },
     {
      "corrections": 50,
-     "wer": 0.1912,
+     "wer": 0.1961,
      "vocab": 163
     },
     {
@@ -53,22 +53,22 @@
     },
     {
      "corrections": 70,
-     "wer": 0.201,
+     "wer": 0.1961,
      "vocab": 232
     },
     {
      "corrections": 80,
-     "wer": 0.2059,
+     "wer": 0.201,
      "vocab": 263
     },
     {
      "corrections": 90,
-     "wer": 0.2059,
+     "wer": 0.1961,
      "vocab": 294
     },
     {
      "corrections": 100,
-     "wer": 0.201,
+     "wer": 0.1961,
      "vocab": 333
     }
    ]
@@ -85,37 +85,37 @@
     },
     {
      "corrections": 10,
-     "wer": 0.1734,
+     "wer": 0.1908,
      "vocab": 41
     },
     {
      "corrections": 20,
-     "wer": 0.185,
+     "wer": 0.1792,
      "vocab": 73
     },
     {
      "corrections": 30,
-     "wer": 0.1908,
+     "wer": 0.1792,
      "vocab": 104
     },
     {
      "corrections": 40,
-     "wer": 0.2023,
+     "wer": 0.185,
      "vocab": 135
     },
     {
      "corrections": 50,
-     "wer": 0.1908,
+     "wer": 0.1792,
      "vocab": 170
     },
     {
      "corrections": 60,
-     "wer": 0.2139,
+     "wer": 0.1908,
      "vocab": 193
     },
     {
      "corrections": 70,
-     "wer": 0.1908,
+     "wer": 0.1792,
      "vocab": 227
     },
     {

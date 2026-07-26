@@ -12,7 +12,7 @@ llama3.1:8b, local.
 
 | | baseline (ASR alone) | after 100 corrections |
 |---|---|---|
-| shared vocabulary | 0.196 | 0.201 |
+| shared vocabulary | 0.196 | 0.196 |
 | unshared vocabulary | 0.179 | 0.185 |
 
 **No gain. Report this plainly.** The interesting part is *why*, and it is not
@@ -37,7 +37,8 @@ What it does support, and worth saying out loud: **personalisation does no
 harm.** An earlier version made accuracy *worse* as the vocabulary grew
 (0.152 → 0.230), because the reranker was assembling fluent sentences out of
 vocabulary words. Constraining it to repair only what it can justify brought
-it back to parity. For an assistive device, "never corrupts a correct
+it back to exact parity in the shared condition: 0.196 before, 0.196 after 100
+corrections. For an assistive device, "never corrupts a correct
 transcription" is a safety property, not a consolation prize.
 
 ## 2. Personal-vocabulary benchmark — proxy speaker
@@ -46,10 +47,14 @@ transcription" is a safety property, not a consolation prize.
 Acoustically degraded until the recogniser fails; sentences written around a
 persona's real-world vocabulary (medication, carers, family, places).
 
+Four synthesised voices (Daniel/Karen/Moira/Samantha — two genders, four
+accents), rotated across utterances so the result is not an artefact of one
+voice.
+
 | | baseline | best checkpoint | relative |
 |---|---|---|---|
-| WER | 0.339 | 0.274 | −19% |
-| **R-WER** (personal terms only) | **0.667** | **0.481** | **−28%** |
+| WER | 0.347 | 0.290 | −16% |
+| **R-WER** (personal terms only) | **0.630** | **0.481** | **−24%** |
 
 R-WER — error rate restricted to the personal terms — is the metric that
 matters, and is standard for contextual biasing. Overall WER dilutes a dozen
@@ -66,7 +71,7 @@ mechanism. It is **not** an estimate of real-world gain.
 
 > Personalisation recovers a speaker's own vocabulary: on a constructed
 > benchmark where the recogniser mis-hears personal terms, error on those
-> terms falls 28% as the vocabulary is learned. On TORGO we measure no change,
+> terms falls 24% as the vocabulary is learned. On TORGO we measure no change,
 > because TORGO's phonetically-balanced prompts contain almost no personal
 > vocabulary to recover — a previously-corrected word is mis-recognised in
 > under 4% of held-out utterances there, capping any possible gain below one
