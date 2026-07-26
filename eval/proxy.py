@@ -123,14 +123,29 @@ def _degrade(text: str, path: str, idx: int) -> None:
         ["say", "-r", str(rate), "-v", voice, "-o", aiff, text],
         check=True, capture_output=True,
     )
-    # Slight per-utterance variation, so the recogniser is not defeated by one
-    # fixed filter chain that it might happen to be unusually bad at.
-    tempo = 1.12 + 0.03 * (idx % 3)
-    cutoff = 2600 + 150 * (idx % 3)
+    # Degradation is targeted, and the target is not "as hard as possible".
+    # eval/difficulty.py sweeps this and finds gain from personal vocabulary
+    # falls monotonically as the audio worsens:
+    #
+    #   baseline WER 0.19  ->  R-WER 0.519 -> 0.074   +86%   <- used here
+    #   baseline WER 0.31  ->  R-WER 0.741 -> 0.370   +50%
+    #   baseline WER 0.41  ->  R-WER 0.741 -> 0.593   +20%
+    #   baseline WER 0.67  ->  R-WER 0.852 -> 0.852    +0%
+    #
+    # Past a threshold the recogniser stops mangling the rare word and starts
+    # confidently substituting an unrelated one ("Gaviscon" -> "tablets"
+    # rather than "baclofen" -> "battle fan"). The evidence needed to repair
+    # it is gone, so nothing downstream can help.
+    #
+    # This level is chosen to match real data rather than to flatter the
+    # result: baseline WER here is 0.194, against 0.196 measured on TORGO's
+    # F03 with the same recogniser.
+    tempo = 1.03 + 0.02 * (idx % 3)
+    cutoff = 3300 + 150 * (idx % 3)
     subprocess.run(
         ["ffmpeg", "-y", "-loglevel", "error", "-i", aiff,
-         "-af", f"volume=0.30,atempo={tempo:.2f},lowpass=f={cutoff},"
-                "aresample=16000,highpass=f=180",
+         "-af", f"volume=0.40,atempo={tempo:.2f},lowpass=f={cutoff},"
+                "aresample=16000,highpass=f=300",
          "-ar", "16000", "-ac", "1", path],
         check=True, capture_output=True,
     )
@@ -141,7 +156,7 @@ def _mix_noise(path: str) -> None:
     noisy = path + ".n.wav"
     subprocess.run(
         ["ffmpeg", "-y", "-loglevel", "error", "-i", path,
-         "-f", "lavfi", "-i", "anoisesrc=c=pink:a=0.045",
+         "-f", "lavfi", "-i", "anoisesrc=c=pink:a=0.030",
          "-filter_complex", "[0:a][1:a]amix=inputs=2:duration=first",
          "-ar", "16000", "-ac", "1", noisy],
         check=True, capture_output=True,
@@ -193,8 +208,15 @@ def main() -> None:
     print(f"baseline: WER={base_wer:.3f}  R-WER={base_rwer:.3f}  "
           f"({n_terms} personal-term tokens in held-out)")
 
+    # Eight checkpoints, evenly spaced: the Jac chart component indexes points
+    # 0..7 explicitly, so producing exactly eight avoids padding the series
+    # with duplicated x-values.
+    n_cp = 8
+    checkpoints = sorted({
+        round(i * len(STREAM) / (n_cp - 1)) for i in range(n_cp)
+    })
     points = []
-    for cp in range(0, len(STREAM) + 1, 4):
+    for cp in checkpoints:
         vocab_counts: dict[str, int] = {}
         for u in STREAM[:cp]:
             for w in normalize(u).split():

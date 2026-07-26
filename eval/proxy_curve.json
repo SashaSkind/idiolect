@@ -25,44 +25,56 @@
  ],
  "stream_n": 20,
  "test_n": 20,
- "baseline_wer": 0.3468,
- "baseline_rare_wer": 0.6296,
+ "baseline_wer": 0.2581,
+ "baseline_rare_wer": 0.5926,
  "points": [
   {
    "corrections": 0,
    "vocab": 0,
-   "wer": 0.2903,
-   "rare_wer": 0.5926
+   "wer": 0.2097,
+   "rare_wer": 0.5556
   },
   {
-   "corrections": 4,
-   "vocab": 6,
-   "wer": 0.2823,
-   "rare_wer": 0.5185
+   "corrections": 3,
+   "vocab": 5,
+   "wer": 0.1694,
+   "rare_wer": 0.3704
   },
   {
-   "corrections": 8,
-   "vocab": 9,
-   "wer": 0.2823,
-   "rare_wer": 0.4815
+   "corrections": 6,
+   "vocab": 8,
+   "wer": 0.1694,
+   "rare_wer": 0.2963
   },
   {
-   "corrections": 12,
+   "corrections": 9,
+   "vocab": 10,
+   "wer": 0.1613,
+   "rare_wer": 0.3333
+  },
+  {
+   "corrections": 11,
+   "vocab": 11,
+   "wer": 0.121,
+   "rare_wer": 0.1852
+  },
+  {
+   "corrections": 14,
    "vocab": 12,
-   "wer": 0.2823,
-   "rare_wer": 0.4444
+   "wer": 0.121,
+   "rare_wer": 0.1852
   },
   {
-   "corrections": 16,
+   "corrections": 17,
    "vocab": 12,
-   "wer": 0.2742,
-   "rare_wer": 0.4074
+   "wer": 0.129,
+   "rare_wer": 0.1852
   },
   {
    "corrections": 20,
    "vocab": 12,
-   "wer": 0.2742,
-   "rare_wer": 0.4444
+   "wer": 0.1532,
+   "rare_wer": 0.2593
   }
  ]
 }
