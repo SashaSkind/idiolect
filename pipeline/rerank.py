@@ -363,10 +363,19 @@ def _plausible(out: str, candidates: list[str], shown_vocab: list[str]) -> bool:
 
 
 def _ollama(prompt: str) -> str:
+    """Call Ollama's chat endpoint with reasoning disabled.
+
+    `think: false` matters for reasoning models. gemma4:e4b routes its output
+    to a separate `thinking` field and, left to reason, spends the whole token
+    budget there and returns empty content — which looks exactly like "the
+    model is bad at this task" while actually being a client bug. Disabled, it
+    answers correctly. Models without a reasoning mode ignore the flag.
+    """
     payload = json.dumps(
         {
             "model": MODEL,
-            "prompt": prompt,
+            "messages": [{"role": "user", "content": prompt}],
+            "think": False,
             "stream": False,
             "keep_alive": -1,  # never unload; a cold start mid-demo is fatal
             "options": {
@@ -385,12 +394,12 @@ def _ollama(prompt: str) -> str:
         }
     ).encode()
     req = urllib.request.Request(
-        f"{OLLAMA_URL}/api/generate",
+        f"{OLLAMA_URL}/api/chat",
         data=payload,
         headers={"Content-Type": "application/json"},
     )
     with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
-        return json.loads(resp.read()).get("response", "")
+        return json.loads(resp.read()).get("message", {}).get("content", "")
 
 
 def rerank(candidates: list[str], vocab: list[str], context: list[str]) -> str:
