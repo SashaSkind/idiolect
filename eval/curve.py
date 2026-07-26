@@ -4,7 +4,7 @@ Simulates the correction loop offline: feed the correction stream in order,
 grow the personal vocabulary as corrections land, and measure WER on a
 held-out set every N corrections.
 
-Output: ``eval/curve.json``, cached. **Never computed live during the demo.**
+Output: ``eval/torgo_curve.json``, cached. **Never computed live during the demo.**
 
 Two conditions are reported, per the build plan:
 
@@ -43,7 +43,7 @@ from eval.torgo import (  # noqa: E402
 from pipeline import asr, rerank  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CURVE_PATH = os.path.join(HERE, "curve.json")
+CURVE_PATH = os.path.join(HERE, "torgo_curve.json")
 CAND_CACHE = os.path.join(HERE, "candidates.json")
 
 #: Evaluate after every this many corrections.
