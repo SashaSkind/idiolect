@@ -14,7 +14,7 @@ def:pub MetricsChart(curve: MetricsCurve | None) -> JsxElement {
             <div className="section-heading">
                 <div>
                     <span className="eyebrow">EVIDENCE</span>
-                    <h2>Accuracy improves with use</h2>
+                    <h2>Your words, after each correction</h2>
                 </div>
                 <span className="metric-badge">WER ↓</span>
             </div>
@@ -70,14 +70,14 @@ def:pub MetricsChart(curve: MetricsCurve | None) -> JsxElement {
                         />
                     </svg>
                     <div className="chart-axis">
-                        <span>0</span><span>10</span><span>20</span><span>30</span>
-                        <span>40</span><span>50</span><span>60</span><span>70 corrections</span>
+                        <span>0</span><span>3</span><span>6</span><span>9</span>
+                        <span>11</span><span>14</span><span>17</span><span>20 corrections</span>
                     </div>
                 </div>
                 <div className="legend">
-                    <span><i className="dot shared"></i>Shared vocabulary</span>
-                    <span><i className="dot unshared"></i>Unshared vocabulary</span>
-                    <span><i className="dot baseline"></i>Baseline ASR</span>
+                    <span><i className="dot shared"></i>Personalised — your words</span>
+                    <span><i className="dot unshared"></i>Personalised — all words</span>
+                    <span><i className="dot baseline"></i>Recogniser alone</span>
                 </div>
                 <p className="source-note">{curve.source}</p>
             }}
