@@ -8,7 +8,7 @@
  ],
  "disclaimer": "Synthesised proxy speech degraded acoustically. NOT dysarthric speech. Isolates whether personal vocabulary is recoverable; not an estimate of real-world gain.",
  "asr_backend": "parakeet",
- "rerank_model": "llama3.1:8b",
+ "rerank_model": "gemma4:e4b",
  "personal_terms": [
   "baclofen",
   "gabapentin",
@@ -31,50 +31,50 @@
   {
    "corrections": 0,
    "vocab": 0,
-   "wer": 0.2097,
-   "rare_wer": 0.5556
+   "wer": 0.1774,
+   "rare_wer": 0.4815
   },
   {
    "corrections": 3,
    "vocab": 5,
-   "wer": 0.1694,
+   "wer": 0.1774,
    "rare_wer": 0.3704
   },
   {
    "corrections": 6,
    "vocab": 8,
-   "wer": 0.1694,
+   "wer": 0.1613,
    "rare_wer": 0.2963
   },
   {
    "corrections": 9,
    "vocab": 10,
-   "wer": 0.1613,
-   "rare_wer": 0.3333
+   "wer": 0.1452,
+   "rare_wer": 0.2593
   },
   {
    "corrections": 11,
    "vocab": 11,
-   "wer": 0.121,
-   "rare_wer": 0.1852
+   "wer": 0.1371,
+   "rare_wer": 0.2222
   },
   {
    "corrections": 14,
-   "vocab": 12,
-   "wer": 0.121,
-   "rare_wer": 0.1852
-  },
-  {
-   "corrections": 17,
    "vocab": 12,
    "wer": 0.129,
    "rare_wer": 0.1852
   },
   {
+   "corrections": 17,
+   "vocab": 12,
+   "wer": 0.1452,
+   "rare_wer": 0.1852
+  },
+  {
    "corrections": 20,
    "vocab": 12,
-   "wer": 0.1532,
-   "rare_wer": 0.2593
+   "wer": 0.1452,
+   "rare_wer": 0.1852
   }
  ]
 }

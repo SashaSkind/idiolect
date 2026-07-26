@@ -12,7 +12,10 @@ arrives here, as vocabulary harvested from their past corrections plus the
 recent conversation. A candidate list that contains "i need my back looking"
 becomes "i need my baclofen" only because 'baclofen' is in their vocabulary.
 
-Runs against a local Ollama. Nothing leaves the machine.
+Runs against a local Ollama on Gemma 4 (gemma4:e4b). Nothing leaves
+the machine. Gemma 4 needs ``think: false`` — it is a reasoning model and
+otherwise routes its answer into a separate ``thinking`` field, returning
+empty content.
 """
 
 from __future__ import annotations
@@ -25,7 +28,7 @@ import urllib.error
 import urllib.request
 
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
-MODEL = os.environ.get("IDIOLECT_RERANK_MODEL", "llama3.1:8b")
+MODEL = os.environ.get("IDIOLECT_RERANK_MODEL", "gemma4:e4b")
 
 #: How many recent utterances of context to show the model.
 CONTEXT_TURNS = 3
