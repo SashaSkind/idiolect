@@ -48,7 +48,11 @@ FREQUENT_VOCAB = 10
 #: above observed false friends (~0.75) and below real cases (~0.89).
 AGREED_OVERRIDE = 0.85
 
-TIMEOUT = float(os.environ.get("IDIOLECT_RERANK_TIMEOUT", "30"))
+TIMEOUT = float(os.environ.get("IDIOLECT_RERANK_TIMEOUT", "60"))
+
+#: Token budget for the reply. Must exceed any reasoning preamble the model
+#: emits, or the answer never arrives.
+NUM_PREDICT = int(os.environ.get("IDIOLECT_RERANK_TOKENS", "300"))
 
 #: Frequent English words. Used only to decide whether a multi-word candidate
 #: span is ordinary enough that it should not be overridden by vocabulary.
@@ -320,6 +324,29 @@ def _plausible(out: str, candidates: list[str], shown_vocab: list[str]) -> bool:
             ):
                 return False
 
+    # A vocabulary word that appears in no candidate is being *introduced*, not
+    # selected. That is only legitimate when it resembles something the
+    # recogniser actually produced — "baclofen" for "backofen". Offering the
+    # speaker's frequent terms for semantically-cued repairs otherwise lets the
+    # model swap in a word nobody said: "pass me the cup" -> "pass me the
+    # straw", "turn on the telly" -> "turn on the Corrie", both drawn straight
+    # from the vocabulary list.
+    cand_words = {w for c in candidates for w in _norm(c).split()}
+    cand_spans = set(cand_words)
+    for c in candidates:
+        ws = _norm(c).split()
+        for k in (2, 3):
+            for i in range(len(ws) - k + 1):
+                cand_spans.add("".join(ws[i : i + k]))
+    for w in ow:
+        if w in cand_words:
+            continue
+        if not any(
+            difflib.SequenceMatcher(None, w, span).ratio() >= VOCAB_RELEVANCE
+            for span in cand_spans
+        ):
+            return False
+
     for c in candidates:
         cw = _norm(c).split()
         if not cw:
@@ -344,8 +371,16 @@ def _ollama(prompt: str) -> str:
             "keep_alive": -1,  # never unload; a cold start mid-demo is fatal
             "options": {
                 "temperature": 0.0,
-                "num_predict": 80,
-                "stop": ["\n\n"],
+                # Generous: some models (gemma4) emit reasoning before the
+                # answer and return an empty response if cut short, which
+                # silently degrades every call to "fall back to candidate 1".
+                "num_predict": NUM_PREDICT,
+                # No stop sequence. "\n\n" looks like an obvious guard against
+                # rambling, but a model that opens its reply with a blank line
+                # (gemma4 does) then stops instantly and returns "", which
+                # degrades silently: every call falls back to candidate 1 and
+                # personalisation appears to do nothing at all. _clean() takes
+                # the first non-empty line anyway, so this was never needed.
             },
         }
     ).encode()
