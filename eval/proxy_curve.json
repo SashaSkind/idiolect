@@ -18,45 +18,45 @@
   "commode"
  ],
  "stream_n": 20,
- "test_n": 12,
- "baseline_wer": 0.3944,
- "baseline_rare_wer": 0.75,
+ "test_n": 20,
+ "baseline_wer": 0.3387,
+ "baseline_rare_wer": 0.6667,
  "points": [
   {
    "corrections": 0,
    "vocab": 0,
-   "wer": 0.3944,
-   "rare_wer": 0.75
+   "wer": 0.2984,
+   "rare_wer": 0.6667
   },
   {
    "corrections": 4,
    "vocab": 6,
-   "wer": 0.3521,
-   "rare_wer": 0.5625
+   "wer": 0.2903,
+   "rare_wer": 0.5185
   },
   {
    "corrections": 8,
    "vocab": 9,
-   "wer": 0.3239,
-   "rare_wer": 0.5
+   "wer": 0.2823,
+   "rare_wer": 0.5185
   },
   {
    "corrections": 12,
    "vocab": 12,
-   "wer": 0.3099,
-   "rare_wer": 0.375
+   "wer": 0.2581,
+   "rare_wer": 0.4074
   },
   {
    "corrections": 16,
    "vocab": 12,
-   "wer": 0.2958,
-   "rare_wer": 0.375
+   "wer": 0.2581,
+   "rare_wer": 0.4074
   },
   {
    "corrections": 20,
    "vocab": 12,
-   "wer": 0.3239,
-   "rare_wer": 0.5
+   "wer": 0.2823,
+   "rare_wer": 0.5185
   }
  ]
 }

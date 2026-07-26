@@ -30,6 +30,13 @@ Honest limitations, to state in the writeup:
   * sentences were written to contain personal vocabulary, so the opportunity
     rate is high by construction. That is the point — it isolates the
     mechanism — but it is not an estimate of real-world gain.
+
+One observed effect worth reporting rather than hiding: the vocabulary
+saturates at 12 corrections (there are only 12 terms), so later checkpoints
+differ *only* in the three-utterance conversational context. Accuracy moves
+between them, which means context is a double-edged input — it can pull the
+reranker toward recently-said words that do not belong in the current
+utterance. Vocabulary is the reliable signal here; context is not.
 """
 
 from __future__ import annotations
@@ -92,6 +99,14 @@ TEST = [
     "put the commode by the window",
     "Nadia forgot the gabapentin again",
     "Bryony will drive me to physio",
+    "the baclofen helps with the spasms",
+    "ask doctor Okafor about the catheter",
+    "Nadia is off next week so Bryony helps",
+    "I need the hoist before the physio comes",
+    "keep the Gaviscon next to the bed",
+    "the Wandsworth clinic rang this morning",
+    "my commode needs a new seat",
+    "does the nebuliser need cleaning today",
 ]
 
 
