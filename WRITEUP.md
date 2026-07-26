@@ -44,7 +44,7 @@ Two stages, each model doing what it's good at:
 | | baseline | after 14 corrections | |
 |---|---|---|---|
 | Error on **personal terms** (R-WER) | 0.593 | **0.185** | **−69%** |
-| Overall WER | 0.258 | **0.121** | **−53%** |
+| Overall WER | 0.258 | **0.129** | **−50%** |
 
 On real dysarthric speech (TORGO) we measure **no gain: 0.196 baseline against 0.206 after 100 corrections**, a difference inside the run-to-run noise (checkpoints span 0.191–0.211) — and we report it, because the reason is interesting. TORGO's prompts are phonetically-balanced TIMIT sentences, so the vocabulary harvested is ordinary English the recogniser already handles. A previously-corrected word is mis-recognised in only **3 of 25** held-out utterances, capping any possible gain below one WER point — under the noise floor. What TORGO *does* establish is that personalisation **neither helps nor meaningfully harms** where it has nothing to offer — which matters, because an earlier version of our reranker degraded accuracy badly as it learned (0.152 → 0.230).
 

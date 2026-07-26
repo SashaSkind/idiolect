@@ -53,8 +53,10 @@ across utterances; sentences written around a persona's real vocabulary
 
 | | baseline | best checkpoint | relative |
 |---|---|---|---|
-| WER | 0.258 | 0.121 | −53% |
+| WER | 0.258 | 0.129 | −50% |
 | **R-WER** (personal terms only) | **0.593** | **0.185** | **−69%** |
+
+(Gemma 4 E4B reranker, Parakeet TDT ASR.)
 
 R-WER — error restricted to the personal terms — is the metric that matters,
 and is standard for contextual biasing. Overall WER dilutes a dozen rare words
