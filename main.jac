@@ -1,11 +1,13 @@
 """Idiolect full-stack entry point."""
 
 import from walkers {
+    Profile,
     Session,
     Utterance,
     Candidate,
     Correction,
     VocabEntry,
+    PronunciationSample,
     TranscriptionResult,
     SessionSnapshot,
     Transcribe,
@@ -15,6 +17,17 @@ import from walkers {
     BuildTrainingSet,
     MetricsCurve,
     GetMetrics,
+    Activity,
+    VocabularyResult,
+    GraphNodeView,
+    GraphSnapshot,
+    ManageVocabulary,
+    RecordPronunciation,
+    ResetSession,
+    GetGraph,
+    ProfileResult,
+    GetProfiles,
+    ManageProfile,
 }
 
 cl {
