@@ -12,8 +12,11 @@ llama3.1:8b, local.
 
 | | baseline (ASR alone) | after 100 corrections |
 |---|---|---|
-| shared vocabulary | 0.196 | 0.196 |
+| shared vocabulary | 0.196 | 0.206 |
 | unshared vocabulary | 0.179 | 0.185 |
+
+(Gemma 4 E4B reranker. Checkpoints span 0.191–0.211 shared, so the endpoint
+difference is inside run-to-run noise, not a trend.)
 
 **No gain. Report this plainly.** The interesting part is *why*, and it is not
 that the mechanism is broken.
@@ -37,8 +40,8 @@ What it does support, and worth saying out loud: **personalisation does no
 harm.** An earlier version made accuracy *worse* as the vocabulary grew
 (0.152 → 0.230), because the reranker was assembling fluent sentences out of
 vocabulary words. Constraining it to repair only what it can justify brought
-it back to exact parity in the shared condition: 0.196 before, 0.196 after 100
-corrections. For an assistive device, "never corrupts a correct
+it back to parity in the shared condition: 0.196 before, 0.206 after 100
+corrections, inside the noise band. For an assistive device, "never corrupts a correct
 transcription" is a safety property, not a consolation prize.
 
 ## 2. Personal-vocabulary benchmark — proxy speaker
