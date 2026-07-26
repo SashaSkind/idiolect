@@ -1,0 +1,46 @@
+{
+ "note": "Gain from personal vocabulary against input difficulty. Harder input does not mean more to gain: past a threshold the recogniser substitutes an unrelated real word ('Gaviscon' -> 'tablets') rather than a near-miss ('baclofen' -> 'battle fan'), and the evidence needed to repair it is gone.",
+ "best_level": "mild",
+ "levels": [
+  {
+   "level": "mild",
+   "baseline_wer": 0.1935,
+   "personalised_wer": 0.0726,
+   "baseline_rare_wer": 0.5185,
+   "personalised_rare_wer": 0.0741,
+   "rare_wer_gain_relative": 0.8571
+  },
+  {
+   "level": "moderate",
+   "baseline_wer": 0.3065,
+   "personalised_wer": 0.2097,
+   "baseline_rare_wer": 0.7407,
+   "personalised_rare_wer": 0.3704,
+   "rare_wer_gain_relative": 0.5
+  },
+  {
+   "level": "hard",
+   "baseline_wer": 0.4113,
+   "personalised_wer": 0.371,
+   "baseline_rare_wer": 0.7407,
+   "personalised_rare_wer": 0.5926,
+   "rare_wer_gain_relative": 0.2
+  },
+  {
+   "level": "severe",
+   "baseline_wer": 0.6694,
+   "personalised_wer": 0.6613,
+   "baseline_rare_wer": 0.8519,
+   "personalised_rare_wer": 0.8519,
+   "rare_wer_gain_relative": 0.0
+  },
+  {
+   "level": "extreme",
+   "baseline_wer": 0.9839,
+   "personalised_wer": 0.9839,
+   "baseline_rare_wer": 1.0,
+   "personalised_rare_wer": 1.0,
+   "rare_wer_gain_relative": 0.0
+  }
+ ]
+}
