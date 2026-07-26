@@ -301,6 +301,28 @@ def _dictionary() -> set[str]:
     return _DICT
 
 
+def _known_word(w: str, d: set[str]) -> bool:
+    """Dictionary membership, tolerant of inflection.
+
+    /usr/share/dict/words is an old list holding mostly base forms, so
+    "dolphins" and "prevents" are absent from it and would otherwise look like
+    mis-recognitions worth overwriting. Checking the stem as well keeps
+    ordinary English out of the snap pass, which is what stops it firing all
+    over a large, ordinary vocabulary.
+    """
+    if w in d:
+        return True
+    for suffix, repl in (
+        ("s", ""), ("es", ""), ("ies", "y"), ("ed", ""), ("ing", ""),
+        ("er", ""), ("est", ""), ("ly", ""),
+    ):
+        if w.endswith(suffix) and len(w) > len(suffix) + 2:
+            stem = w[: -len(suffix)] + repl
+            if stem in d or stem + "e" in d:
+                return True
+    return False
+
+
 def _snap_to_vocab(text: str, vocab: list[str]) -> str:
     """Replace non-words with the personal term they resemble.
 
@@ -337,7 +359,7 @@ def _snap_to_vocab(text: str, vocab: list[str]) -> str:
     # benefit. The rule follows from what the feature is for.
     targets = [(v, _norm(v)) for v in vocab]
     targets = [
-        (v, n) for v, n in targets if n and len(n) >= 4 and n not in d
+        (v, n) for v, n in targets if n and len(n) >= 4 and not _known_word(n, d)
     ]
     if not targets:
         return text
@@ -348,7 +370,7 @@ def _snap_to_vocab(text: str, vocab: list[str]) -> str:
         low = core.lower()
         if (
             len(low) < 4
-            or low in d
+            or _known_word(low, d)
             or low in COMMON_WORDS
             or any(low == n for _, n in targets)  # already correct
         ):
