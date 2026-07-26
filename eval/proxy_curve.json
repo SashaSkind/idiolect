@@ -1,0 +1,62 @@
+{
+ "benchmark": "personal-vocabulary, proxy speaker (synthetic)",
+ "disclaimer": "Synthesised proxy speech degraded acoustically. NOT dysarthric speech. Isolates whether personal vocabulary is recoverable; not an estimate of real-world gain.",
+ "asr_backend": "parakeet",
+ "rerank_model": "llama3.1:8b",
+ "personal_terms": [
+  "baclofen",
+  "gabapentin",
+  "Gaviscon",
+  "catheter",
+  "physio",
+  "hoist",
+  "Nadia",
+  "Okafor",
+  "Wandsworth",
+  "Bryony",
+  "nebuliser",
+  "commode"
+ ],
+ "stream_n": 20,
+ "test_n": 12,
+ "baseline_wer": 0.3944,
+ "baseline_rare_wer": 0.75,
+ "points": [
+  {
+   "corrections": 0,
+   "vocab": 0,
+   "wer": 0.3944,
+   "rare_wer": 0.75
+  },
+  {
+   "corrections": 4,
+   "vocab": 6,
+   "wer": 0.3521,
+   "rare_wer": 0.5625
+  },
+  {
+   "corrections": 8,
+   "vocab": 9,
+   "wer": 0.3239,
+   "rare_wer": 0.5
+  },
+  {
+   "corrections": 12,
+   "vocab": 12,
+   "wer": 0.3099,
+   "rare_wer": 0.375
+  },
+  {
+   "corrections": 16,
+   "vocab": 12,
+   "wer": 0.2958,
+   "rare_wer": 0.375
+  },
+  {
+   "corrections": 20,
+   "vocab": 12,
+   "wer": 0.3239,
+   "rare_wer": 0.5
+  }
+ ]
+}
