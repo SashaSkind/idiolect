@@ -22,6 +22,8 @@ recorded by someone whose voice tires. Idiolect does the opposite: it learns
 from **the corrections you were going to make anyway**. Fix a word once, it
 remembers. Zero training, and nothing leaves the machine.
 
+**▶ [Watch the 2-minute demo](https://youtu.be/gN7w_Fb1kpw)**
+
 Built for JacHacks SF 2026 / the Gemma 4 Challenge.
 
 ---

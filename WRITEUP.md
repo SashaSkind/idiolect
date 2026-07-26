@@ -52,7 +52,7 @@ We also swept degradation, since *"why not test on worse audio?"* is the obvious
 
 ### 🚀 The Prototype
 
-[INSERT LINK TO YOUR 2-MINUTE DEMO VIDEO HERE]
+**Demo video:** https://youtu.be/gN7w_Fb1kpw
 
 https://github.com/SashaSkind/idiolect
 
