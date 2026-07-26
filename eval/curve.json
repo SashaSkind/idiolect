@@ -1,7 +1,48 @@
 {
-  "corrections": [0, 10, 20, 30, 40, 50, 60, 70],
-  "baseline": [0.68, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68],
-  "shared_vocabulary": [0.68, 0.59, 0.51, 0.43, 0.36, 0.31, 0.27, 0.24],
-  "unshared_vocabulary": [0.68, 0.65, 0.62, 0.59, 0.57, 0.55, 0.54, 0.53],
-  "source": "Placeholder data — Track A replaces this file with UI-ready results"
+ "corrections": [
+  0,
+  3,
+  6,
+  9,
+  11,
+  14,
+  17,
+  20
+ ],
+ "baseline": [
+  0.5926,
+  0.5926,
+  0.5926,
+  0.5926,
+  0.5926,
+  0.5926,
+  0.5926,
+  0.5926
+ ],
+ "shared_vocabulary": [
+  0.5556,
+  0.3704,
+  0.2963,
+  0.3333,
+  0.1852,
+  0.1852,
+  0.1852,
+  0.2593
+ ],
+ "unshared_vocabulary": [
+  0.2097,
+  0.1694,
+  0.1694,
+  0.1613,
+  0.121,
+  0.121,
+  0.129,
+  0.1532
+ ],
+ "series_labels": {
+  "baseline": "Recogniser alone (personal terms)",
+  "shared_vocabulary": "Personalised \u2014 personal terms (R-WER)",
+  "unshared_vocabulary": "Personalised \u2014 all words (WER)"
+ },
+ "source": "Personal-vocabulary benchmark, proxy speaker (synthetic, four voices; NOT dysarthric speech). Error on the speaker's own terms falls 0.593 -> 0.185 as corrections accumulate. TORGO is reported separately and is flat by construction \u2014 see eval/FINDINGS.md."
 }
