@@ -34,24 +34,34 @@ if Ollama is unreachable.
 Call `pipeline.asr.warmup()` and `pipeline.rerank.warmup()` at server start so
 the first user interaction isn't slow.
 
-## Models — READ THIS, it differs from the build plan
+## Models
 
-The venue network runs at ~90–170 KB/s. The models named in the original plan
-could not be downloaded (Parakeet 2.5 GB ≈ 7.5 h; `gemma4:e4b` 9.6 GB ≈ 23 h).
-Substitutions actually in use:
+| Role | **In use** | Notes |
+|---|---|---|
+| ASR | **`mlx-community/parakeet-tdt-0.6b-v3`** | as planned; auto-selected when weights present |
+| Rerank LLM | **`llama3.1:8b` via Ollama** | replaces `gemma4:e4b` |
 
-| Role | Planned | **Actually used** | Why |
-|---|---|---|---|
-| ASR | `parakeet-tdt-0.6b-v3` | **`mlx-community/whisper-base-mlx`** (144 MB) | only viable download |
-| Rerank LLM | `gemma4:e4b` | **`llama3.1:8b` via Ollama** | already on disk, 0 bytes to fetch |
+**Track B:** byLLM must point at `ollama/llama3.1:8b`, *not* `ollama/gemma-4-e4b`
+— the latter is not even a real Ollama tag (the correct one is `gemma4:e4b`,
+9.6 GB). `llama3.1:8b` was already on disk and is validated; treat gemma4 as an
+optional swap, not a dependency.
 
-**Track B:** byLLM must point at `ollama/llama3.1:8b`, *not* `ollama/gemma-4-e4b`.
+Whisper (`whisper-small-mlx`) is fully implemented as a fallback backend.
+Force either with `IDIOLECT_ASR_BACKEND=parakeet|whisper`.
 
-Parakeet remains the preferred ASR and is fully implemented in `pipeline/asr.py`.
-It auto-activates the moment its weights appear in the HF cache — no code change.
-Force a backend with `IDIOLECT_ASR_BACKEND=whisper|parakeet`.
+Warm latency, measured: **ASR 0.27 s + rerank 1.4 s ≈ 1.6 s** per utterance.
+Call `asr.warmup()` and `rerank.warmup()` at server start — cold ASR is ~3 s
+and a cold Ollama load is ~6 s.
 
-Everything runs locally. Nothing goes to a hosted API.
+Everything runs locally. Nothing goes to a hosted API — worth stating in the
+writeup, since the demo vocabulary is medical.
+
+## Evidence
+
+See `eval/FINDINGS.md` before writing any claim about accuracy. Short version:
+TORGO shows **no gain** (and we explain why — its prompts contain almost no
+personal vocabulary); the proxy benchmark shows **R-WER −39%**. Do not claim a
+TORGO improvement.
 
 ## Ollama
 
