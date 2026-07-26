@@ -1,5 +1,5 @@
 {
- "generated": "2026-07-26 14:24",
+ "generated": "2026-07-26 14:41",
  "asr_backend": "parakeet",
  "asr_model": "mlx-community/parakeet-tdt-0.6b-v3",
  "rerank_model": "llama3.1:8b",
@@ -23,52 +23,52 @@
     },
     {
      "corrections": 10,
-     "wer": 0.2059,
+     "wer": 0.2108,
      "vocab": 39
     },
     {
      "corrections": 20,
-     "wer": 0.1961,
+     "wer": 0.2206,
      "vocab": 72
     },
     {
      "corrections": 30,
-     "wer": 0.1961,
+     "wer": 0.2255,
      "vocab": 97
     },
     {
      "corrections": 40,
-     "wer": 0.1961,
+     "wer": 0.2206,
      "vocab": 131
     },
     {
      "corrections": 50,
-     "wer": 0.1961,
+     "wer": 0.2255,
      "vocab": 163
     },
     {
      "corrections": 60,
-     "wer": 0.1961,
+     "wer": 0.2402,
      "vocab": 199
     },
     {
      "corrections": 70,
-     "wer": 0.1961,
+     "wer": 0.2353,
      "vocab": 232
     },
     {
      "corrections": 80,
-     "wer": 0.201,
+     "wer": 0.2353,
      "vocab": 263
     },
     {
      "corrections": 90,
-     "wer": 0.1961,
+     "wer": 0.2353,
      "vocab": 294
     },
     {
      "corrections": 100,
-     "wer": 0.1961,
+     "wer": 0.2304,
      "vocab": 333
     }
    ]
@@ -90,47 +90,47 @@
     },
     {
      "corrections": 20,
-     "wer": 0.1792,
+     "wer": 0.1908,
      "vocab": 73
     },
     {
      "corrections": 30,
-     "wer": 0.1792,
+     "wer": 0.1965,
      "vocab": 104
     },
     {
      "corrections": 40,
-     "wer": 0.185,
+     "wer": 0.2197,
      "vocab": 135
     },
     {
      "corrections": 50,
-     "wer": 0.1792,
+     "wer": 0.2139,
      "vocab": 170
     },
     {
      "corrections": 60,
-     "wer": 0.1908,
+     "wer": 0.2428,
      "vocab": 193
     },
     {
      "corrections": 70,
-     "wer": 0.1792,
+     "wer": 0.237,
      "vocab": 227
     },
     {
      "corrections": 80,
-     "wer": 0.1908,
+     "wer": 0.2254,
      "vocab": 248
     },
     {
      "corrections": 90,
-     "wer": 0.185,
+     "wer": 0.2254,
      "vocab": 286
     },
     {
      "corrections": 100,
-     "wer": 0.185,
+     "wer": 0.2428,
      "vocab": 314
     }
    ]

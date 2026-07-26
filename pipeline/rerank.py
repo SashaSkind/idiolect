@@ -48,6 +48,12 @@ FREQUENT_VOCAB = 10
 #: above observed false friends (~0.75) and below real cases (~0.89).
 AGREED_OVERRIDE = 0.85
 
+#: Similarity needed to snap an unrecognised token onto a personal term.
+SNAP = float(os.environ.get("IDIOLECT_SNAP", "0.62"))
+
+#: System word list, used only to tell a real word from a mis-recognition.
+DICT_PATH = os.environ.get("IDIOLECT_DICT", "/usr/share/dict/words")
+
 TIMEOUT = float(os.environ.get("IDIOLECT_RERANK_TIMEOUT", "60"))
 
 #: Token budget for the reply. Must exceed any reasoning preamble the model
@@ -281,6 +287,83 @@ def _clean(raw: str) -> str:
     return text.strip()
 
 
+_DICT: set[str] | None = None
+
+
+def _dictionary() -> set[str]:
+    global _DICT
+    if _DICT is None:
+        try:
+            with open(DICT_PATH) as f:
+                _DICT = {w.strip().lower() for w in f}
+        except OSError:
+            _DICT = set()
+    return _DICT
+
+
+def _snap_to_vocab(text: str, vocab: list[str]) -> str:
+    """Replace non-words with the personal term they resemble.
+
+    The reranker's remaining failures were not selection mistakes: measured on
+    the proxy benchmark, every missed personal term had been offered to the
+    model, which simply declined to apply it. "gaviscan", "briany", "okafa"
+    were left standing next to Gaviscon, Bryony and Okafor.
+
+    Matching a known spelling is a string problem, not a language-model
+    problem, so it is done deterministically here. Similarity alone cannot
+    decide it — "hoist"/"host" scores 0.889, as high as any true repair — but
+    the false positives share a property: they are real English words the
+    speaker may well have said. The true repairs are not words at all. So a
+    token is only snapped when the dictionary does not recognise it, which
+    separated every observed case cleanly.
+
+    Deliberately single-token: joining adjacent real words ("the ones worth")
+    manufactures matches, and that judgement is left to the model.
+    """
+    d = _dictionary()
+    if not d or not vocab:
+        return text
+
+    # Snap only *onto* terms the dictionary does not know: names, places,
+    # brands, drugs — the words a general recogniser cannot get right and a
+    # personal vocabulary genuinely has to supply.
+    #
+    # Without this restriction the pass is harmful at scale. On TORGO the
+    # learned vocabulary is 333 ordinary English words (organ, zest, greasy),
+    # every mis-recognised token finds some loose match among them, and WER
+    # rose from 0.196 to 0.230. Restricted to out-of-dictionary terms, TORGO
+    # has almost nothing to snap to and is left alone, while the proxy
+    # benchmark — whose vocabulary is Gaviscon, Okafor, Wandsworth — keeps the
+    # benefit. The rule follows from what the feature is for.
+    targets = [(v, _norm(v)) for v in vocab]
+    targets = [
+        (v, n) for v, n in targets if n and len(n) >= 4 and n not in d
+    ]
+    if not targets:
+        return text
+
+    out = []
+    for tok in text.split():
+        core = re.sub(r"^[^\w']+|[^\w']+$", "", tok)
+        low = core.lower()
+        if (
+            len(low) < 4
+            or low in d
+            or low in COMMON_WORDS
+            or any(low == n for _, n in targets)  # already correct
+        ):
+            out.append(tok)
+            continue
+
+        best, best_r = None, 0.0
+        for term, norm_term in targets:
+            r = difflib.SequenceMatcher(None, low, norm_term).ratio()
+            if r > best_r:
+                best, best_r = term, r
+        out.append(tok.replace(core, best) if best and best_r >= SNAP else tok)
+    return " ".join(out)
+
+
 def _plausible(out: str, candidates: list[str], shown_vocab: list[str]) -> bool:
     """Reject answers that are not a repair of some candidate.
 
@@ -425,8 +508,10 @@ def rerank(candidates: list[str], vocab: list[str], context: list[str]) -> str:
 
     out = _clean(raw)
     if not _plausible(out, candidates, shown):
-        return candidates[0]
-    return out
+        out = candidates[0]
+    # Applied to the fallback too: snapping a known spelling is deterministic
+    # and does not depend on the model having cooperated.
+    return _snap_to_vocab(out, vocab or [])
 
 
 def available() -> bool:

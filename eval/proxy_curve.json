@@ -37,32 +37,32 @@
   {
    "corrections": 4,
    "vocab": 6,
-   "wer": 0.2984,
-   "rare_wer": 0.5926
+   "wer": 0.2823,
+   "rare_wer": 0.5185
   },
   {
    "corrections": 8,
    "vocab": 9,
-   "wer": 0.2984,
-   "rare_wer": 0.5556
+   "wer": 0.2661,
+   "rare_wer": 0.4074
   },
   {
    "corrections": 12,
    "vocab": 12,
-   "wer": 0.3065,
-   "rare_wer": 0.5556
+   "wer": 0.2661,
+   "rare_wer": 0.3704
   },
   {
    "corrections": 16,
    "vocab": 12,
-   "wer": 0.2903,
-   "rare_wer": 0.4815
+   "wer": 0.2661,
+   "rare_wer": 0.3704
   },
   {
    "corrections": 20,
    "vocab": 12,
-   "wer": 0.2903,
-   "rare_wer": 0.5185
+   "wer": 0.2581,
+   "rare_wer": 0.3704
   }
  ]
 }
