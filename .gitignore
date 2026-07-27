@@ -33,3 +33,6 @@ listen.html
 # Regenerate locally with: python3 eval/make_samples.py
 assets/samples/*.wav
 assets/samples/manifest.json
+
+# build artifact
+idiolect-submission.zip
