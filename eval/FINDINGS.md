@@ -53,8 +53,8 @@ across utterances; sentences written around a persona's real vocabulary
 
 | | baseline | best checkpoint | relative |
 |---|---|---|---|
-| WER | 0.258 | 0.129 | −50% |
-| **R-WER** (personal terms only) | **0.593** | **0.185** | **−69%** |
+| WER | 0.258 | 0.081 | −69% |
+| **R-WER** (personal terms only) | **0.593** | **0.074** | **−87%** |
 
 (Gemma 4 E4B reranker, Parakeet TDT ASR.)
 

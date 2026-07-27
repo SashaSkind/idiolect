@@ -302,6 +302,68 @@ def _transcribe_parakeet(audio_path: str, n: int) -> list[str]:
 # ==========================================================================
 
 
+# ==========================================================================
+# Gemma 4 native audio — a second, independent hypothesis source
+# ==========================================================================
+
+#: Invoke Gemma's audio path when Parakeet's candidates disagree.
+GEMMA_AUDIO = os.environ.get("IDIOLECT_GEMMA_AUDIO", "1") == "1"
+GEMMA_AUDIO_MODEL = os.environ.get("IDIOLECT_GEMMA_AUDIO_MODEL", "gemma4:e4b")
+
+_GEMMA_PROMPT = (
+    "Transcribe this audio exactly. The speaker may have a speech impairment. "
+    "Output only the words spoken, on one line, with no commentary."
+)
+
+
+def gemma_audio_hypothesis(audio_path: str, timeout: float = 30.0) -> str:
+    """Transcribe with Gemma 4's native audio path. Returns '' on any failure.
+
+    Gemma 4 is not a better transcriber than Parakeet and is not used as one.
+    It is useful here because it is *independently* wrong: for one clip
+    Parakeet returned "battle fender" and Gemma returned "bachelor's ben" for
+    the same word. Two unrelated errors give the reranker more to triangulate
+    from than one error repeated, and the correct word is more likely to be
+    recoverable from either.
+
+    Audio rides in the `images` field — Ollama routes all media through it.
+    """
+    import base64
+    import json as _json
+    import urllib.request
+
+    try:
+        with open(audio_path, "rb") as f:
+            blob = base64.b64encode(f.read()).decode()
+        body = {
+            "model": GEMMA_AUDIO_MODEL,
+            "messages": [
+                {"role": "user", "content": _GEMMA_PROMPT, "images": [blob]}
+            ],
+            "stream": False,
+            "think": False,  # reasoning models return empty content otherwise
+            "keep_alive": -1,
+            "options": {"temperature": 0.0, "num_predict": 120},
+        }
+        url = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+        req = urllib.request.Request(
+            f"{url}/api/chat",
+            data=_json.dumps(body).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            text = _json.loads(resp.read()).get("message", {}).get("content", "")
+    except Exception:
+        return ""  # never let the second opinion break transcription
+
+    text = (text or "").strip().split("\n")[0].strip()
+    # Refusals and commentary are worse than no hypothesis at all.
+    low = text.lower()
+    if not text or low.startswith(("i'm sorry", "i cannot", "i can't", "sorry")):
+        return ""
+    return text.strip('"')
+
+
 def _select_backend() -> str:
     forced = os.environ.get("IDIOLECT_ASR_BACKEND", "").strip().lower()
     if forced in ("whisper", "parakeet"):
@@ -322,8 +384,18 @@ else:
 def transcribe(audio_path: str, n: int = DEFAULT_N) -> list[str]:
     """Return n-best candidate transcriptions for ``audio_path``, best first."""
     if BACKEND == "parakeet":
-        return _transcribe_parakeet(audio_path, n)
-    return _transcribe_whisper(audio_path, n)
+        out = _transcribe_parakeet(audio_path, n)
+    else:
+        out = _transcribe_whisper(audio_path, n)
+
+    # Selective escalation: only ask Gemma when the acoustic model is unsure.
+    # A unanimous n-best means it was confident, and a second opinion costs a
+    # second inference for nothing. Disagreement is where extra evidence pays.
+    if GEMMA_AUDIO and len(out) > 1:
+        extra = gemma_audio_hypothesis(audio_path)
+        if extra:
+            out = _dedupe(out + [extra])[: n + 1]
+    return out
 
 
 def warmup() -> None:

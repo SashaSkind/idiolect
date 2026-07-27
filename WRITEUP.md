@@ -31,6 +31,8 @@ Two stages, each model doing what it's good at:
 1. **Parakeet TDT 0.6B (MLX)** produces an *n-best list* of candidate transcriptions — not one guess, several.
 2. **Gemma 4 E4B** picks or repairs the best candidate given the speaker's personal vocabulary and their last three utterances — the step that needs language understanding rather than acoustics.
 
+**Gemma 4 also transcribes.** When Parakeet's candidates disagree — and only then — we escalate to Gemma 4's **native audio** path for a second, independent hypothesis. Gemma isn't the better transcriber; it's usefully wrong in *different* places. On one clip Parakeet returned *"battle fender"* and Gemma returned *"bachelor's ben"* for the same word. Two unrelated errors give the reranker far more to triangulate from than one error repeated — R-WER drops from 0.185 to **0.074** when we add it. Selective escalation keeps the cost down: a unanimous n-best means the acoustic model was confident, so the second opinion is skipped.
+
 **Prompt engineering, not fine-tuning.** Nothing is trained. Personalisation is entirely a growing vocabulary harvested from the user's own corrections and supplied to Gemma as context — closer to contextual biasing (RAG over your own vocabulary) than to model adaptation.
 
 **Getting an n-best list at all** was the first real problem. Parakeet and Whisper both compute a full ranked list of hypotheses during beam search, then discard everything except the winner. Rather than reimplement beam search, we take the *installed source* of the deciding method, swap the single call that collapses the list, and rebind it — top-1 stays bit-identical to the library's, but the discarded alternatives survive for Gemma to choose between.
@@ -41,10 +43,10 @@ Two stages, each model doing what it's good at:
 
 **What we measured.** On a personal-vocabulary benchmark (four synthesised proxy voices — **not** dysarthric speech, and we say so), degraded to baseline WER 0.258, chosen to sit near real data: TORGO's F03 speaker measures 0.196 with the same recogniser.
 
-| | baseline | after 14 corrections | |
+| | baseline | after 17 corrections | |
 |---|---|---|---|
-| Error on **personal terms** (R-WER) | 0.593 | **0.185** | **−69%** |
-| Overall WER | 0.258 | **0.129** | **−50%** |
+| Error on **personal terms** (R-WER) | 0.593 | **0.074** | **−87%** |
+| Overall WER | 0.258 | **0.081** | **−69%** |
 
 On real dysarthric speech (TORGO) we measure **no gain: 0.196 baseline against 0.206 after 100 corrections**, a difference inside the run-to-run noise (checkpoints span 0.191–0.211) — and we report it, because the reason is interesting. TORGO's prompts are phonetically-balanced TIMIT sentences, so the vocabulary harvested is ordinary English the recogniser already handles. A previously-corrected word is mis-recognised in only **3 of 25** held-out utterances, capping any possible gain below one WER point — under the noise floor. What TORGO *does* establish is that personalisation **neither helps nor meaningfully harms** where it has nothing to offer — which matters, because an earlier version of our reranker degraded accuracy badly as it learned (0.152 → 0.230).
 
@@ -68,6 +70,6 @@ Speak → see candidates → correct one → watch the vocabulary panel grow →
 
 **The venue wifi collapsed to 90 KB/s** an hour in, with a 23-hour ETA on the Gemma download. We built the whole pipeline against a 144 MB fallback model behind a stable two-function contract, then hot-swapped the real models in when the network recovered — no code changes, because the contract held.
 
-**What's next:** Gemma 4's native audio path as a *second* hypothesis source, invoked only when Parakeet's candidates disagree — selective escalation rather than running both every time.
+**What's next:** real dysarthric speakers saying *their own words* — the one thing no public corpus currently provides.
 
 *Attribution: TORGO (Rudzicz et al., 2012), academic use only. Parakeet TDT (NVIDIA, CC-BY-4.0). Gemma 4 (Google). Proxy-speaker disclosure: the benchmark and demo use synthesised/non-dysarthric proxy speech; no dysarthric speaker recorded audio for this project.*

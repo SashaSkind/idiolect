@@ -71,6 +71,23 @@ sentence a person would actually say, and which mangled span is really
 - Warm, it answers in **~0.6 s**, and on our benchmark it beat the alternative
   we tested (llama3.1:8b) with a cleanly monotone accuracy curve.
 
+
+**Gemma 4 also transcribes.** When Parakeet's candidates disagree — and only
+then — we escalate to Gemma 4's *native audio* path for a second, independent
+hypothesis. Gemma is not the better transcriber; it is usefully wrong in
+*different* places. For one clip Parakeet returned "battle fender" and Gemma
+returned "bachelor's ben" for the same word. Two unrelated errors give the
+reranker far more to triangulate from than one error repeated, and it is worth
+a great deal:
+
+| | Parakeet only | **+ Gemma 4 audio** |
+|---|---|---|
+| R-WER | 0.185 | **0.074** |
+| WER | 0.129 | **0.081** |
+
+Selective escalation keeps the cost down: a unanimous n-best means the acoustic
+model was confident, so the second opinion is skipped entirely.
+
 Everything is local. No hosted API, no network at demo time. That's a
 requirement rather than a preference: the vocabulary this system learns is
 medical and personal, and *"where does my voice go?"* deserves a clean answer.
@@ -84,10 +101,10 @@ dysarthric speech (see [disclosure](#honest-limitations)) — degraded to
 baseline WER 0.258, chosen to sit near real data: TORGO's F03 speaker measures
 0.196 with the same recogniser.
 
-| | baseline | after 14 corrections | |
+| | baseline | after 17 corrections | |
 |---|---|---|---|
-| Error on **personal terms** (R-WER) | 0.593 | **0.185** | **−69%** |
-| Overall WER | 0.258 | **0.129** | **−50%** |
+| Error on **personal terms** (R-WER) | 0.593 | **0.074** | **−87%** |
+| Overall WER | 0.258 | **0.081** | **−69%** |
 
 R-WER — error restricted to the speaker's own terms — is the metric that
 matters here and is standard for contextual biasing. Overall WER dilutes a

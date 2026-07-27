@@ -20,29 +20,29 @@
   0.5926
  ],
  "shared_vocabulary": [
-  0.4815,
-  0.3704,
-  0.2963,
+  0.4444,
   0.2593,
   0.2222,
-  0.1852,
-  0.1852,
-  0.1852
+  0.1481,
+  0.1481,
+  0.1111,
+  0.0741,
+  0.1111
  ],
  "unshared_vocabulary": [
-  0.1774,
-  0.1774,
-  0.1613,
-  0.1452,
   0.1371,
-  0.129,
-  0.1452,
-  0.1452
+  0.1129,
+  0.121,
+  0.0968,
+  0.0968,
+  0.1048,
+  0.0806,
+  0.0968
  ],
  "series_labels": {
   "baseline": "Recogniser alone (personal terms)",
   "shared_vocabulary": "Personalised \u2014 personal terms (R-WER)",
   "unshared_vocabulary": "Personalised \u2014 all words (WER)"
  },
- "source": "Personal-vocabulary benchmark, proxy speaker (synthetic, four voices; NOT dysarthric speech). Error on the speaker's own terms falls 0.593 -> 0.185 as corrections accumulate. TORGO is reported separately and is flat by construction \u2014 see eval/FINDINGS.md."
+ "source": "Personal-vocabulary benchmark, proxy speaker (synthetic, four voices; NOT dysarthric speech). Error on the speaker's own terms falls 0.593 -> 0.074 as corrections accumulate. TORGO is reported separately and is flat by construction \u2014 see eval/FINDINGS.md."
 }

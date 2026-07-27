@@ -31,50 +31,50 @@
   {
    "corrections": 0,
    "vocab": 0,
-   "wer": 0.1774,
-   "rare_wer": 0.4815
+   "wer": 0.1371,
+   "rare_wer": 0.4444
   },
   {
    "corrections": 3,
    "vocab": 5,
-   "wer": 0.1774,
-   "rare_wer": 0.3704
+   "wer": 0.1129,
+   "rare_wer": 0.2593
   },
   {
    "corrections": 6,
    "vocab": 8,
-   "wer": 0.1613,
-   "rare_wer": 0.2963
+   "wer": 0.121,
+   "rare_wer": 0.2222
   },
   {
    "corrections": 9,
    "vocab": 10,
-   "wer": 0.1452,
-   "rare_wer": 0.2593
+   "wer": 0.0968,
+   "rare_wer": 0.1481
   },
   {
    "corrections": 11,
    "vocab": 11,
-   "wer": 0.1371,
-   "rare_wer": 0.2222
+   "wer": 0.0968,
+   "rare_wer": 0.1481
   },
   {
    "corrections": 14,
    "vocab": 12,
-   "wer": 0.129,
-   "rare_wer": 0.1852
+   "wer": 0.1048,
+   "rare_wer": 0.1111
   },
   {
    "corrections": 17,
    "vocab": 12,
-   "wer": 0.1452,
-   "rare_wer": 0.1852
+   "wer": 0.0806,
+   "rare_wer": 0.0741
   },
   {
    "corrections": 20,
    "vocab": 12,
-   "wer": 0.1452,
-   "rare_wer": 0.1852
+   "wer": 0.0968,
+   "rare_wer": 0.1111
   }
  ]
 }
