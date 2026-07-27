@@ -31,8 +31,13 @@ def main() -> None:
         sys.exit("no TORGO utterances found — populate data/torgo/ first")
     os.makedirs(DEST, exist_ok=True)
 
-    picks = [u for u in utts if u.speaker == "F01"][:3]
-    picks += [u for u in utts if u.speaker == "F03"][:2]
+    # M01 first: severe dysarthria like F01, but 86 sentence utterances
+    # against F01's 19, and the recogniser fails on it in a more instructive
+    # way (0.64 WER of near-misses like "clings" -> "clinks", against F01's
+    # 0.81 where candidates often collapse to something unrelated).
+    picks = [u for u in utts if u.speaker == "M01"][:3]
+    picks += [u for u in utts if u.speaker == "F01"][:2]
+    picks += [u for u in utts if u.speaker == "F03"][:1]
 
     manifest = []
     for i, u in enumerate(picks):
