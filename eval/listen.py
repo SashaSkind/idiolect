@@ -23,6 +23,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from eval.difficulty import LEVELS  # noqa: E402
+from eval.torgo import load_utterances  # noqa: E402
 from eval.proxy import PERSONAL_TERMS, STREAM, TEST, build_audio  # noqa: E402
 from eval.torgo import normalize  # noqa: E402
 from pipeline import asr, rerank  # noqa: E402
@@ -107,12 +108,39 @@ def main() -> None:
             f"<td class='out'>{mark(out, terms)}</td></tr>"
         )
 
+    print("real dysarthric speech (TORGO)...")
+    rows_torgo = []
+    torgo = load_utterances()
+    for spk in ("F01", "F03", "F04"):
+        for u in [x for x in torgo if x.speaker == spk][:4]:
+            cands = asr.transcribe(u.audio)
+            rel = os.path.relpath(u.audio, ROOT)
+            rows_torgo.append(
+                f"<tr><td class='lvl'>{spk}</td>"
+                f"<td class='ref'>{html.escape(u.text)}</td>"
+                f"<td><audio controls preload='none' src='{rel}'></audio></td>"
+                f"<td class='asr'>{html.escape(cands[0])}</td></tr>"
+            )
+
     doc = f"""<!doctype html><meta charset="utf-8">
 <title>Idiolect — hear the audio</title><style>{CSS}</style>
 <h1>Idiolect — hear what the recogniser hears</h1>
 <p class="sub">Proxy speaker: synthesised, acoustically degraded.
 <b>Not dysarthric speech.</b> Personal terms are
 <span class="hit">highlighted</span> when they survive.</p>
+
+<h2>0. Real dysarthric speech <span class="tag">TORGO — actual speakers</span></h2>
+<p class="note">Real recordings from speakers with dysarthria (cerebral palsy or
+ALS; the distribution does not label which). This is the audio behind every
+TORGO number we report. F01 is severe — we measure 0.81 WER on it. F03 is
+moderate, 0.196.
+<br><br>Note what these sentences <i>are</i>: phonetically-balanced TIMIT
+prompts. Real voices, but nobody says the name of their medication or their
+carer. That is exactly why they cannot test personalisation, and why the
+synthetic set below exists — not to stand in for these voices, but to supply
+the vocabulary these prompts lack.</p>
+<table><tr><th>speaker</th><th>prompt</th><th>audio</th>
+<th>Parakeet heard</th></tr>{''.join(rows_torgo)}</table>
 
 <h2>1. The difficulty ladder <span class="tag">same sentence, five levels</span></h2>
 <p class="note">Reference: <b>{html.escape(ref0)}</b>. Listen down the list.
