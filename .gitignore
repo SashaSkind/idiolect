@@ -36,3 +36,7 @@ assets/samples/manifest.json
 
 # build artifact
 idiolect-submission.zip
+
+# TORGO-derived demo clip: academic-use licence, not redistributable.
+# Regenerate with: ffmpeg -i assets/samples/m01_0.wav -b:a 48k assets/demo-voice.mp3
+assets/demo-voice.mp3

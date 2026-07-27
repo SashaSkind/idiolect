@@ -422,6 +422,32 @@ def _transcribe_impl(audio_path: str, n: int) -> list[str]:
     return out
 
 
+def _background_warmup() -> None:
+    """Load the model as soon as this module is imported, off the critical path.
+
+    The first transcription otherwise pays for loading Parakeet, which can take
+    tens of seconds. The Jac client gives up on a walker long before that and
+    shows "the local speech pipeline could not process that recording", while
+    the server quietly finishes and logs a 200 — a failure that looks like a
+    broken pipeline but is only a cold start. Warming here means the first
+    click a user makes is already fast.
+
+    Runs on the same single MLX worker as everything else, so a real request
+    arriving mid-warmup simply queues behind it rather than racing it.
+    """
+    def _load():
+        try:
+            if BACKEND == "parakeet":
+                _load_parakeet()
+            else:
+                _whisper_call.__call__  # imported lazily; nothing to preload
+        except Exception:
+            pass
+
+    threading.Thread(target=lambda: _run_on_mlx_thread(_load),
+                     name="idiolect-warmup", daemon=True).start()
+
+
 def warmup() -> None:
     """Force model load so the demo's first click isn't slow."""
     import wave
@@ -453,3 +479,7 @@ if __name__ == "__main__":
     for i, c in enumerate(transcribe(path)):
         print(f"  [{i}] {c!r}")
     print(f"transcribed in {time.time() - t0:.2f}s")
+
+
+# Start loading the model at import, so the first real request is not slow.
+_background_warmup()
