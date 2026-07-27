@@ -32,19 +32,31 @@ def:pub Recorder(
             };
             _recorder.onstop = lambda {
                 blob = new(Blob, _chunks, {"type": mime_type});
-                reader = new(FileReader);
-                reader.onloadend = lambda {
-                    onAudio.call(None, str(reader.result), mime_type);
-                };
-                reader.readAsDataURL(blob);
                 for track in _stream.getTracks() {
                     track.stop();
                 }
                 _stream = None;
                 _recorder = None;
                 _chunks = [];
+                # A WebM container with no audio in it is ~110 bytes. Sending
+                # one produces a confusing "no transcription came back" from
+                # the server, because ffmpeg cannot open it. Catch it here and
+                # say something the user can act on.
+                if blob.size < 2000 {
+                    error_message = "That recording was empty. Hold the button, speak for a second or two, then stop.";
+                } else {
+                    reader = new(FileReader);
+                    reader.onloadend = lambda {
+                        onAudio.call(None, str(reader.result), mime_type);
+                    };
+                    reader.readAsDataURL(blob);
+                }
             };
-            _recorder.start();
+            # A timeslice makes ondataavailable fire *during* recording rather
+            # than once at stop. Without it the single data event races onstop
+            # and _chunks is frequently still empty when the Blob is built,
+            # which is why most recordings arrived as 110-byte headers.
+            _recorder.start(250);
             elapsed = 0;
             recording = True;
             timer_id = setInterval(lambda {
