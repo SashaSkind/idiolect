@@ -183,11 +183,21 @@ walker:pub Transcribe {
         Path(os.path.dirname(audio_path)).mkdir(parents=True, exist_ok=True);
 
         if self.audio_data.startswith("sample:") {
-            # Demo path: a bundled recording of real dysarthric speech (TORGO),
-            # transcribed through exactly the same pipeline as live microphone
-            # input. Lets the demo show a real impaired voice rather than a
-            # presenter imitating one.
-            audio_path = self.audio_data[7:];
+            # Demo path: a bundled recording, transcribed through exactly the
+            # same pipeline as live microphone input, so the demo can show a
+            # real impaired voice rather than a presenter imitating one.
+            #
+            # The bundled file is *copied* rather than referenced. Pointing
+            # audio_path at the shared asset looked simpler, but every
+            # utterance then owned a file it did not create, and deleting a
+            # profile - which removes its utterances' audio - deleted the
+            # demo assets for everyone. Copying keeps ownership one-to-one.
+            source_path = self.audio_data[7:];
+            with open(source_path, "rb") as source_file {
+                with open(audio_path, "wb") as audio_file {
+                    audio_file.write(source_file.read());
+                }
+            }
         } else {
             encoded = self.audio_data.split(",", 1)[1] if "," in self.audio_data else self.audio_data;
             with open(audio_path, "wb") as audio_file {
