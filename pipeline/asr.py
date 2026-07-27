@@ -44,6 +44,7 @@ import inspect
 import os
 import textwrap
 import threading
+from concurrent.futures import ThreadPoolExecutor
 
 #: How many candidates ``transcribe()`` returns by default.
 DEFAULT_N = 4
@@ -381,8 +382,31 @@ else:
     NBEST_AVAILABLE = _whisper_patched
 
 
+#: MLX arrays are bound to the thread that created them: using a model from a
+#: thread other than the one that loaded it raises
+#: "There is no Stream(cpu, 1) in current thread". The Jac server dispatches
+#: each walker through `asyncio.to_thread`, so consecutive requests arrive on
+#: different pool threads and the second one fails. Funnelling every MLX call
+#: through one dedicated worker keeps model creation and use on a single
+#: thread, which is what MLX requires. It also serialises decoding, which is
+#: correct anyway — the GPU is one resource.
+_mlx_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="idiolect-mlx")
+
+
+def _run_on_mlx_thread(fn, *args):
+    return _mlx_pool.submit(fn, *args).result()
+
+
 def transcribe(audio_path: str, n: int = DEFAULT_N) -> list[str]:
-    """Return n-best candidate transcriptions for ``audio_path``, best first."""
+    """Return n-best candidate transcriptions for ``audio_path``, best first.
+
+    Safe to call from any thread: the MLX work is marshalled onto a single
+    dedicated worker (see `_mlx_pool`).
+    """
+    return _run_on_mlx_thread(_transcribe_impl, audio_path, n)
+
+
+def _transcribe_impl(audio_path: str, n: int) -> list[str]:
     if BACKEND == "parakeet":
         out = _transcribe_parakeet(audio_path, n)
     else:

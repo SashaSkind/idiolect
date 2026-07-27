@@ -176,7 +176,7 @@ def status() -> None:
 
 def main() -> None:
     try:
-        call("GetProfiles", {}, timeout=10)
+        call("GetProfiles", {}, timeout=180)
     except Exception as e:
         sys.exit(f"app not reachable at {API} — start it with "
                  f"'.venv/bin/jac start --dev main.jac'  ({e})")
