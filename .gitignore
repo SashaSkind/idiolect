@@ -28,3 +28,8 @@ eval/training-set.jsonl
 
 # generated listening page (references gitignored audio)
 listen.html
+
+# TORGO-derived demo clips: academic-use licence, not redistributable.
+# Regenerate locally with: python3 eval/make_samples.py
+assets/samples/*.wav
+assets/samples/manifest.json
