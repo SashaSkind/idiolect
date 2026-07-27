@@ -166,12 +166,16 @@ def status() -> None:
         snap = call("GetSession", {"profile_id": pid})
         s = snap[0] if snap else {}
         g = (call("GetGraph", {"profile_id": pid}) or [{}])[0]
+        from collections import Counter
+        kinds = Counter(n.get("kind", "?") for n in g.get("nodes", []))
         print(f"  {p.get('name'):16s} utterances={len(s.get('recent_utterances', [])):3d} "
               f"vocab={len(s.get('vocabulary', [])):3d} "
               f"corrections={s.get('correction_count', '?'):>3} "
               f"training_pairs={s.get('training_pair_count', '?'):>3} "
               f"activities={len(s.get('activities', [])):3d} "
-              f"nodes={len(g.get('nodes', [])):3d} edges={len(g.get('edges', [])):3d}")
+              f"nodes={g.get('node_count', 0):3d} edges={g.get('edge_count', 0):3d}")
+        if kinds:
+            print("                   " + "  ".join(f"{k}={v}" for k, v in kinds.most_common()))
 
 
 def main() -> None:
