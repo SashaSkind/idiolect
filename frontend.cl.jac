@@ -104,6 +104,14 @@ def:pub IdiolectApp() -> JsxElement {
         }
     }
 
+    async def try_dysarthric_sample -> None {
+        # A real recording from TORGO speaker F01 (severe dysarthria), run
+        # through exactly the same pipeline as live microphone input. Lets the
+        # demo show an actually impaired voice instead of a presenter
+        # imitating one.
+        await process_audio("sample:assets/samples/f01_2.wav", "audio/wav");
+    }
+
     async def process_audio(audio_data: str, mime_type: str) -> None {
         phase = "processing";
         status_message = "Listening closely…";
@@ -575,6 +583,13 @@ def:pub IdiolectApp() -> JsxElement {
                                 disabled={phase == "processing"}
                                 onAudio={process_audio}
                             />
+                            <button
+                                className="text-button"
+                                onClick={try_dysarthric_sample}
+                                disabled={phase == "processing"}
+                            >
+                                Or try a real dysarthric voice (TORGO F01)
+                            </button>
                             if phase == "processing" {
                                 <div className="processing-row">
                                     <span className="spinner"></span>

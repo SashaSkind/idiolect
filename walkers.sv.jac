@@ -182,9 +182,17 @@ walker:pub Transcribe {
         audio_path = os.path.join("data", "audio", "utterance-" + stamp + suffix);
         Path(os.path.dirname(audio_path)).mkdir(parents=True, exist_ok=True);
 
-        encoded = self.audio_data.split(",", 1)[1] if "," in self.audio_data else self.audio_data;
-        with open(audio_path, "wb") as audio_file {
-            audio_file.write(base64.b64decode(encoded));
+        if self.audio_data.startswith("sample:") {
+            # Demo path: a bundled recording of real dysarthric speech (TORGO),
+            # transcribed through exactly the same pipeline as live microphone
+            # input. Lets the demo show a real impaired voice rather than a
+            # presenter imitating one.
+            audio_path = self.audio_data[7:];
+        } else {
+            encoded = self.audio_data.split(",", 1)[1] if "," in self.audio_data else self.audio_data;
+            with open(audio_path, "wb") as audio_file {
+                audio_file.write(base64.b64decode(encoded));
+            }
         }
 
         raw_candidates: list[str] = transcribe(audio_path) as list[str];
