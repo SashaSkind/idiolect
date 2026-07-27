@@ -51,7 +51,7 @@ def:pub Recorder(
                 elapsed = elapsed + 1;
             }, 1000);
         } except Exception {
-            error_message = "Microphone access was blocked. Allow it in this browser and try again.";
+            error_message = "Microphone blocked. Click the icon at the left of the address bar, set Microphone to Allow, then reload this page.";
             recording = False;
         }
     }
