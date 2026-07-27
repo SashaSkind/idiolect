@@ -25,3 +25,6 @@ eval/training-set.jsonl
 # Editors
 .idea/
 .vscode/
+
+# generated listening page (references gitignored audio)
+listen.html
