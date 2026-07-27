@@ -1384,3 +1384,25 @@ footer {
   .steps > div { padding: 24px 20px; }
   .learning-flow-wrap { margin-inline: -8px; padding-inline: 14px; }
 }
+
+/* Play a real dysarthric recording before transcribing it, so the audience
+   hears the problem rather than only reading the transcript. */
+.sample-row {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.sample-label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+.sample-player {
+  height: 34px;
+  max-width: 320px;
+  width: 100%;
+}
+.sample-label-second { margin-top: 14px; }

@@ -31,6 +31,22 @@ sv import from walkers {
 }
 
 
+def join_text(items: list[str], sep: str) -> str {
+    # `" ".join(x)` is Python; this file compiles to JavaScript, where strings
+    # have no .join, so it fails at runtime with
+    # "'str' object has no attribute 'join'" only on the paths that use it -
+    # word-level correction and the "Learned ..." banner, both of which are
+    # mid-demo interactions.
+    out = "";
+    first = True;
+    for item in items {
+        if first { out = out + item; first = False; }
+        else { out = out + sep + item; }
+    }
+    return out;
+}
+
+
 def:pub IdiolectApp() -> JsxElement {
     has phase: str = "ready",
         status_message: str = "Ready when you are",
@@ -112,6 +128,14 @@ def:pub IdiolectApp() -> JsxElement {
         await process_audio("sample:assets/samples/m01_0.wav", "audio/wav");
     }
 
+    async def try_learned_sample -> None {
+        # The same speaker saying a sentence that contains a word already in
+        # their vocabulary. Standard ASR returns "backlog"; the personalised
+        # column returns "baclofen". This is the beat the whole product is
+        # about, so the demo should not depend on it happening live.
+        await process_audio("sample:assets/samples/demo_learned.wav", "audio/wav");
+    }
+
     async def process_audio(audio_data: str, mime_type: str) -> None {
         phase = "processing";
         status_message = "Listening closely…";
@@ -163,7 +187,7 @@ def:pub IdiolectApp() -> JsxElement {
         words = correction_text.split();
         if selected_word >= 0 and selected_word < len(words) and replacement_word.strip() {
             words[selected_word] = replacement_word.strip();
-            correction_text = " ".join(words);
+            correction_text = join_text(words, " ");
             selected_word = -1;
             replacement_word = "";
         }
@@ -583,13 +607,40 @@ def:pub IdiolectApp() -> JsxElement {
                                 disabled={phase == "processing"}
                                 onAudio={process_audio}
                             />
-                            <button
-                                className="text-button"
-                                onClick={try_dysarthric_sample}
-                                disabled={phase == "processing"}
-                            >
-                                Or try a real dysarthric voice (TORGO M01, severe)
-                            </button>
+                            <div className="sample-row">
+                                <p className="sample-label">
+                                    Hear a real dysarthric voice — TORGO M01, severe
+                                </p>
+                                <audio
+                                    className="sample-player"
+                                    controls="controls"
+                                    preload="none"
+                                    src="/assets/demo-voice.mp3"
+                                ></audio>
+                                <button
+                                    className="text-button"
+                                    onClick={try_dysarthric_sample}
+                                    disabled={phase == "processing"}
+                                >
+                                    Transcribe this recording
+                                </button>
+                                <p className="sample-label sample-label-second">
+                                    Or hear personalisation change the answer
+                                </p>
+                                <audio
+                                    className="sample-player"
+                                    controls="controls"
+                                    preload="none"
+                                    src="/assets/demo-learned.mp3"
+                                ></audio>
+                                <button
+                                    className="text-button"
+                                    onClick={try_learned_sample}
+                                    disabled={phase == "processing"}
+                                >
+                                    Transcribe with my vocabulary
+                                </button>
+                            </div>
                             if phase == "processing" {
                                 <div className="processing-row">
                                     <span className="spinner"></span>
@@ -619,7 +670,7 @@ def:pub IdiolectApp() -> JsxElement {
                                             <strong>Saved: “{accepted_text}”</strong>
                                             <p>
                                                 {
-                                                    "Learned " + ", ".join(last_learned)
+                                                    "Learned " + join_text(last_learned, ", ")
                                                     if last_learned
                                                     else "Context reinforced—ready for the next phrase."
                                                 }
